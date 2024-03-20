@@ -1,23 +1,19 @@
 from telegram import Bot
 
-from components.db import db_get_today_birthdays
-from components.helpers import get_wish
+from components.helpers import get_wishes
 
 
 async def create_birthday_wish(bot: Bot) -> None:
-    today_birthdays = db_get_today_birthdays()
+    wishes = get_wishes()
 
-    birth_dict = {}
-    # fill the dictionary key - chat_id, value - list of birthday people
-    for person in today_birthdays:
-        if person[0] in birth_dict:
-            birth_dict[person[0]].append(person)
+    messages_by_chat_id = {}
+    for element in wishes:
+        chat_id = element[0]
+        message = f"Поздравление для {element[1]}: \n\n {element[2]}"
+        if chat_id in messages_by_chat_id:
+            messages_by_chat_id[chat_id].append(message)
         else:
-            birth_dict[person[0]] = [person]
+            messages_by_chat_id[chat_id] = [message]
 
-    for chat_id, people in birth_dict.items():
-
-        await bot.send_message(chat_id=chat_id, text="Поздравления для сегодняшних именинников!")
-
-        for person in people:
-            await bot.send_message(chat_id=chat_id, text=f"{person[1]}: \n {get_wish(person)}")
+    for chat_id, messages in messages_by_chat_id.items():
+        await bot.send_message(chat_id=chat_id, text="\n\n".join(messages))
