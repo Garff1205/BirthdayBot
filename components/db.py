@@ -13,6 +13,8 @@ CREATE_DB_QUERY = """CREATE TABLE IF NOT EXISTS birthdays
 
 ADD_BIRTHDAY_QUERY = """INSERT INTO birthdays (chat_id, name, relative, birthdate, interests, wishes) VALUES (?, ?, ?, ?, ?, ?)"""
 
+GET_ALL_BIRTHDAYS_QUERY = """SELECT (name, relative, birthdate, interests, wishes) FROM birthdays WHERE chat_id = ?"""
+
 
 def create_db():
     conn = sqlite3.connect(DB)
@@ -28,3 +30,12 @@ def db_add_birthday(chat_id, name, relative, birthdate, interests, wishes):
     c.execute(ADD_BIRTHDAY_QUERY, (chat_id, name, relative, birthdate, interests, wishes))
     conn.commit()
     conn.close()
+
+
+def db_get_all_birthdays(chat_id):
+    conn = sqlite3.connect(DB)
+    c = conn.cursor()
+    c.execute(GET_ALL_BIRTHDAYS_QUERY, chat_id)
+    birthdays = c.fetchall()
+    conn.close()
+    return birthdays
