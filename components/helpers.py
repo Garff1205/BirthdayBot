@@ -1,6 +1,6 @@
+from db import db_get_today_birthdays
 from openai import OpenAI
 
-from db import db_get_today_birthdays
 from settings.prod import DEBUG
 
 
@@ -18,15 +18,20 @@ def get_wishes():
         completion = client.chat.completions.create(
             model="gpt-3.5-turbo",
             messages=[
-                {"role": "system",
-                 "content": """
+                {
+                    "role": "system",
+                    "content": """
                  Сгенерируйте поздравления с днем рождения для нескольких людей, учитывая их имена, отношения 
                  поздравляющего и именинника, интересы и специфические пожелания. Каждое поздравление должно быть кратким, 
                  в пределах 1-3 предложений. Поздравления должны быть разделены двойным символом ";;". Пожалуйста, 
                  учитывайте эти детали при составлении поздравлений.
-                 """},
-                {"role": "user", "content": f"список людей для поздравления: \n {text}"}
-            ]
+                 """,
+                },
+                {
+                    "role": "user",
+                    "content": f"список людей для поздравления: \n {text}",
+                },
+            ],
         )
 
         response = completion.choices[0].message.content
@@ -38,5 +43,7 @@ def get_wishes():
 
         response = ";;".join(wishes)
 
-    return [{"chat_id": person[0], "name": person[1], "wish": wish} for person, wish in
-            zip(persons, response.split(";;"))]
+    return [
+        {"chat_id": person[0], "name": person[1], "wish": wish}
+        for person, wish in zip(persons, response.split(";;"))
+    ]

@@ -29,7 +29,9 @@ def create_db():
 def db_add_birthday(chat_id, name, relative, birthdate, interests, wishes):
     conn = sqlite3.connect(DB)
     c = conn.cursor()
-    c.execute(ADD_BIRTHDAY_QUERY, (chat_id, name, relative, birthdate, interests, wishes))
+    c.execute(
+        ADD_BIRTHDAY_QUERY, (chat_id, name, relative, birthdate, interests, wishes)
+    )
     conn.commit()
     conn.close()
 

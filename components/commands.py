@@ -28,7 +28,14 @@ async def add_birthday(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
         )
 
 
-async def check_all_birthdays(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+async def check_all_birthdays(
+    update: Update, context: ContextTypes.DEFAULT_TYPE
+) -> None:
     people = db_get_all_birthdays(update.message.chat_id)
-    message_text = "\n".join([f"Имя: {person[0]}, дата рождения: {datetime.strptime(person[2], '%Y-%m-%d').strptime('%d %B %Y')}" for person in people])
+    message_text = "\n".join(
+        [
+            f"Имя: {person[0]}, дата рождения: {datetime.strptime(person[2], '%Y-%m-%d').strptime('%d %B %Y')}"
+            for person in people
+        ]
+    )
     await update.message.reply_text(message_text)

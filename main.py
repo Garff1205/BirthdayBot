@@ -1,7 +1,7 @@
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from telegram.ext import Application, CommandHandler
 
-from components.commands import start, add_birthday, check_all_birthdays
+from components.commands import add_birthday, check_all_birthdays, start
 from components.functions import create_birthday_wish
 from settings.prod import TOKEN
 
