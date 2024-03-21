@@ -1,34 +1,30 @@
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from telegram.ext import Application, CommandHandler
 
-from components.commands import add_birthday, check_all_birthdays, start
+from components.commands import handlers
 from components.functions import create_birthday_wish
 from settings.prod import TOKEN, DEBUG
 
 
 def main() -> None:
+    # Init bot
     application = Application.builder().token(TOKEN).build()
+
+    # Init scheduler and add daily job for birthday wishes sent
     scheduler = AsyncIOScheduler()
-    if "TIME" in DEBUG:
-        scheduler.add_job(
-            func=create_birthday_wish,
-            trigger="cron",
-            second=0,
-            kwargs={"bot": application.bot},
-        )
-    else:
-        scheduler.add_job(
-            func=create_birthday_wish,
-            trigger="cron",
-            hour=13,
-            minute=0,
-            kwargs={"bot": application.bot},
-        )
+    scheduler_job_args = {
+        'func': create_birthday_wish,
+        'trigger': "cron",
+        'kwargs': {"bot": application.bot}
+    }
+    scheduler_job_timing = {'second': 0} if "TIME" in DEBUG else {'hour': 13, 'minute': 0}
+    scheduler.add_job(**scheduler_job_timing, **scheduler_job_args)
 
-    application.add_handler(CommandHandler("start", start))
-    application.add_handler(CommandHandler("add", add_birthday))
-    application.add_handler(CommandHandler("check", check_all_birthdays))
+    # Add handlers to the bot
+    for item in handlers.items():
+        application.add_handler(CommandHandler(*item))
 
+    # Start the bot and scheduler
     scheduler.start()
     application.run_polling()
 

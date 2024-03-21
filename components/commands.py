@@ -39,3 +39,10 @@ async def check_all_birthdays(
         ]
     )
     await update.message.reply_text(message_text)
+
+
+handlers = {
+        "start": start,
+        "add": add_birthday,
+        "check": check_all_birthdays
+    }
