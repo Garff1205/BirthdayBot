@@ -1,4 +1,4 @@
-from db import db_get_today_birthdays
+from components.db import db_get_today_birthdays
 from openai import OpenAI
 
 from settings.prod import DEBUG
