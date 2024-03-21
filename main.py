@@ -9,19 +9,19 @@ from settings.prod import TOKEN, DEBUG
 def main() -> None:
     application = Application.builder().token(TOKEN).build()
     scheduler = AsyncIOScheduler()
-    if not DEBUG:
+    if "TIME" in DEBUG:
         scheduler.add_job(
             func=create_birthday_wish,
             trigger="cron",
-            hour=13,
-            minute=0,
+            second=0,
             kwargs={"bot": application.bot},
         )
     else:
         scheduler.add_job(
             func=create_birthday_wish,
             trigger="cron",
-            second="*/10",
+            hour=13,
+            minute=0,
             kwargs={"bot": application.bot},
         )
 

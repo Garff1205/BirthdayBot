@@ -15,7 +15,7 @@ ADD_BIRTHDAY_QUERY = """INSERT INTO birthdays (chat_id, name, relative, birthdat
 
 GET_ALL_BIRTHDAYS_QUERY = """SELECT (name, relative, birthdate, interests, wishes) FROM birthdays WHERE chat_id = ?"""
 
-GET_TODAY_BIRTHDAYS_QUERY = """SELECT (chat_id, name, relative, birthdate, interests, wishes) FROM birthdays WHERE strftime('%m-%d', birthdate) = strftime('%m-%d', 'now')"""
+GET_TODAY_BIRTHDAYS_QUERY = """SELECT chat_id, name, relative, birthdate, interests, wishes FROM birthdays WHERE strftime('%m-%d', birthdate) = strftime('%m-%d', 'now')"""
 
 
 def create_db():
