@@ -52,3 +52,7 @@ def db_get_today_birthdays():
     birthdays = c.fetchall()
     conn.close()
     return birthdays
+
+
+if __name__ == "__main__":
+    create_db()
