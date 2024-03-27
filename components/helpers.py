@@ -1,20 +1,24 @@
+from typing import List, Dict
+
 from components.db import db_get_today_birthdays
 from openai import OpenAI
 
 from settings.prod import DEBUG
+from components.types import Person
 
 
-def get_wishes():
-    persons = db_get_today_birthdays()
+def get_wishes(persons: List[Person] = None) -> List[Dict[str, str]]:
+    persons: List[Person] = persons or db_get_today_birthdays()
 
     text = ""
     for person in persons:
-        text += f"имя - {person[1]}; отношения - {person[2]}; интересы - {person[4]}; пожелания - {person[5]};\n"
+        text += (f"имя - {person['name']}; отношения - {person['relationship']}; интересы - {person['interests']}; "
+                 f"пожелания - {person['wishes']};\n")
 
     if "GPT" in DEBUG:
         wishes = []
         for person in persons:
-            wishes.append(f"Сгенерированное поздравление для {person[1]}")
+            wishes.append(f"Сгенерированное поздравление для {person['name']}")
 
         response = ";;".join(wishes)
     else:
@@ -27,9 +31,9 @@ def get_wishes():
                     "role": "system",
                     "content": """
                          Сгенерируйте поздравления с днем рождения для нескольких людей, учитывая их имена, отношения 
-                         поздравляющего и именинника, интересы и специфические пожелания. Каждое поздравление должно быть кратким, 
-                         в пределах 1-3 предложений. Поздравления должны быть разделены двойным символом ";;". Пожалуйста, 
-                         учитывайте эти детали при составлении поздравлений.
+                         поздравляющего и именинника, интересы и специфические пожелания. Каждое поздравление должно 
+                         быть кратким, в пределах 1-3 предложений. Поздравления должны быть разделены двойным символом 
+                         ";;". Пожалуйста, учитывайте эти детали при составлении поздравлений.
                          """,
                 },
                 {
@@ -40,7 +44,6 @@ def get_wishes():
         )
 
         response = completion.choices[0].message.content
-
 
     return [
         {"chat_id": person[0], "name": person[1], "wish": wish}

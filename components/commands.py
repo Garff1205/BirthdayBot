@@ -1,9 +1,11 @@
 from datetime import datetime
+from typing import List
 
 from telegram import Update
 from telegram.ext import ContextTypes
 
 from components.db import db_add_birthday, db_get_all_birthdays
+from components.types import Person
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -34,11 +36,11 @@ async def add_birthday(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
 async def check_all_birthdays(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> None:
-    people = db_get_all_birthdays(update.message.chat_id)
+    persons: List[Person] = db_get_all_birthdays(update.message.chat_id)
     message_text = "\n".join(
         [
-            f"Имя: {person[0]}, дата рождения: {datetime.strptime(person[2], '%Y-%m-%d').strptime('%d %B %Y')}"
-            for person in people
+            f"Имя: {person['name']}, дата рождения: {datetime.strptime(person['birthdate'],'%Y-%m-%d').strftime('%d %B %Y')}"
+            for person in persons
         ]
     )
     await update.message.reply_text(message_text)
