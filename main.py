@@ -2,7 +2,7 @@ from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from telegram.ext import Application, CommandHandler
 
 from components.commands import handlers
-from components.functions import create_birthday_wish
+from components.functions import send_all_today_birthday_wishes
 from settings.prod import TOKEN, DEBUG
 
 
@@ -13,7 +13,7 @@ def main() -> None:
     # Init scheduler and add daily job for birthday wishes sent
     scheduler = AsyncIOScheduler()
     scheduler_job_args = {
-        'func': create_birthday_wish,
+        'func': send_all_today_birthday_wishes,
         'trigger': "cron",
         'kwargs': {"bot": application.bot}
     }

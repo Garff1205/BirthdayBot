@@ -3,7 +3,7 @@ from telegram import Bot
 from components.helpers import get_wishes
 
 
-async def create_birthday_wish(bot: Bot) -> None:
+async def send_all_today_birthday_wishes(bot: Bot) -> None:
     wishes = get_wishes()
 
     messages_by_chat_id = {}
