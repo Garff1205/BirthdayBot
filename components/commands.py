@@ -17,6 +17,7 @@ async def add_birthday(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
     args = " ".join(context.args).split("; ")
     if len(args) == 5:
         db_add_birthday(update.message.chat_id, *args)
+        await update.message.reply_text("Информация о человеке успешно добавлена!")
     else:
         await update.message.reply_text(
             "Пожалуйста, используйте формат: "
