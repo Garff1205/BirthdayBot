@@ -39,7 +39,7 @@ def db_add_birthday(chat_id, name, relative, birthdate, interests, wishes):
 def db_get_all_birthdays(chat_id: int):
     conn = sqlite3.connect(DB)
     c = conn.cursor()
-    c.execute(GET_ALL_BIRTHDAYS_QUERY, str(chat_id))
+    c.execute(GET_ALL_BIRTHDAYS_QUERY, (chat_id, ))
     birthdays = c.fetchall()
     conn.close()
     return birthdays
