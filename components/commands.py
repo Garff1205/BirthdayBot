@@ -5,6 +5,7 @@ from telegram import Update
 from telegram.ext import ContextTypes
 
 from components.db import db_add_birthday, db_get_all_birthdays
+from components.helpers import get_wishes
 from components.types import Person
 
 
@@ -21,7 +22,16 @@ async def add_birthday(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
         db_add_birthday(update.message.chat_id, *args)
         await update.message.reply_text("Информация о человеке успешно добавлена!")
         if datetime.strptime(args[2], "%Y-%m-%d").strftime("%m-%d") == datetime.now().strftime("%m-%d"):
-            await create_birthday_wish(update.message.chat_id, args[0])
+            person: Person = {
+                "chat_id": update.message.chat_id,
+                "name": args[0],
+                "relationship": args[1],
+                "birthdate": args[2],
+                "interests": args[3],
+                "wishes": args[4]
+            }
+            wishes = get_wishes(persons=[person,])
+            await update.message.reply_text(wishes[0]["wish"])
     else:
         await update.message.reply_text(
             "Пожалуйста, используйте формат: "
