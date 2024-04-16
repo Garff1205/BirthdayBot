@@ -46,6 +46,6 @@ def get_wishes(persons: List[Person] = None) -> List[Dict[str, str]]:
         response = completion.choices[0].message.content
 
     return [
-        {"chat_id": person[0], "name": person[1], "wish": wish}
+        {"chat_id": person["chat_id"], "name": person["name"], "wish": wish}
         for person, wish in zip(persons, response.split(";;"))
     ]
